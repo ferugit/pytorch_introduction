@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torchvision import models
 import json
 
 class SerializableModule(nn.Module):
@@ -76,3 +77,25 @@ class LeNet(SerializableModule):
         return x
 
     
+class Resnet_18(SerializableModule):
+    """
+    Transfer learning model
+    """
+    def __init__(self, out_features=2):
+        super().__init__()
+
+        self.model = models.resnet18(pretrained=True)
+
+        # Set fixed parameters
+        for param in self.model.parameters():
+            param.requires_grad= False
+
+        self.model.fc = nn.Sequential(
+            nn.Linear(self.model.fc.in_features, 100),
+            nn.ReLU(),
+            nn.Dropout(p=0.2),
+            nn.Linear(100, out_features)
+        )
+    
+    def forward(self, x):
+        return self.model(x)

@@ -50,7 +50,7 @@ def get_roc_auc(labels, output, one_hot=False):
     # Get ROC and AUC
     if(one_hot):
         output_scores = np.array(output)[:,1].tolist()
-        labels = np.array(labels).argmax(1).tolist()
+        #labels = np.array(labels).argmax(1).tolist()
     else:
         output_scores = output
 
